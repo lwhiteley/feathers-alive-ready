@@ -22,7 +22,7 @@ npm install --save feathers-alive-ready
 
 ```json
 // default.json
-// add any number of arbitratry keys here, mongoose is just an example
+// add any number of arbitrary keys here, mongoose is just an example
 {
   "readiness": {
     "mongoose": false
@@ -42,6 +42,7 @@ const app = feathers();
 // Initialize the plugin before all other services that may require
 // a health check
 app.configure(health());
+app.configure(mongoose);
 ```
 
 What happens in step 2
