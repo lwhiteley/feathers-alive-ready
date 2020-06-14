@@ -22,7 +22,7 @@ npm install --save feathers-alive-ready
 
 ```json
 // default.json
-// add any arbitratry key here, mongoose is just an example
+// add any number of arbitratry keys here, mongoose is just an example
 {
   "readiness": {
     "mongoose": false
