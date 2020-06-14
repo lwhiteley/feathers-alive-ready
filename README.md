@@ -34,7 +34,7 @@ npm install --save feathers-alive-ready
 
 ```js
 import feathers from '@feathersjs/feathers';
-import health from 'feathers-alive-ready';
+import { health } from 'feathers-alive-ready';
 import mongoose from './mongoose';
 
 // Initialize the application

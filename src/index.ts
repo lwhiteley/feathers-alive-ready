@@ -8,7 +8,7 @@ export interface HealthOptions {
   readyUrl?: string;
 }
 
-export default (opts?: HealthOptions) => {
+export const health = (opts?: HealthOptions) => {
   const { configKey: ns, returnData, aliveUrl, readyUrl } = {
     configKey: 'readiness',
     returnData: false,

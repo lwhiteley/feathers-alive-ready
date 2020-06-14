@@ -2,9 +2,6 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "outDir": "lib",
     "typeRoots": [
       "node_modules/@types"
