@@ -85,7 +85,7 @@ You can customize the plugin by passing in options.
 | configKey  | `readiness`     | which property to look for the readiness config in the app config files |
 | returnData | false           | determines if to return the readiness object in the ready endpoint      |
 | aliveUrl   | `/health/alive` | alive endpoint                                                          |
-| readyUrl   | `/health/alive` | ready endpoint                                                          |
+| readyUrl   | `/health/ready` | ready endpoint                                                          |
 
 ```js
 app.configure(
