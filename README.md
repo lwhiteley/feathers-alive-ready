@@ -4,11 +4,15 @@
 
 feathersjs health check endpoints
 
-> a plugin to perform health check endpoints for a feathers application
+> a plugin to add health check endpoints for a feathersjs application
 
 ## Installation
 
 ```
+// install peer dependencies
+npm install --save @feathersjs/errors @feathersjs/express @feathersjs/feathers
+
+// install module
 npm install --save feathers-alive-ready
 ```
 
