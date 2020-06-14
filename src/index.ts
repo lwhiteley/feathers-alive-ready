@@ -1,7 +1,7 @@
 import { BadRequest } from '@feathersjs/errors';
 import { Application } from '@feathersjs/express';
 
-interface HealthOptions {
+export interface HealthOptions {
   configKey?: string;
   returnData?: boolean;
   aliveUrl?: string;
