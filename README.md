@@ -33,8 +33,9 @@ npm install --save feathers-alive-ready
 ### Step 2: Configure the plugin
 
 ```js
-const feathers = require('@feathersjs/feathers');
-const health = require('feathers-alive-ready');
+import feathers from '@feathersjs/feathers';
+import health from 'feathers-alive-ready';
+import mongoose from './mongoose';
 
 // Initialize the application
 const app = feathers();
