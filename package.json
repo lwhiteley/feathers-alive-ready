@@ -1,0 +1,46 @@
+{
+  "name": "feathers-alive-ready",
+  "version": "0.0.0",
+  "description": "feathersjs health check endpoints",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf lib && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lwhiteley/feathers-alive-ready.git"
+  },
+  "keywords": [
+    "health",
+    "check",
+    "health-check",
+    "alive",
+    "ready",
+    "feathers",
+    "feathersjs",
+    "api",
+    "rest"
+  ],
+  "author": "Layton Whiteley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lwhiteley/feathers-alive-ready/issues"
+  },
+  "homepage": "https://github.com/lwhiteley/feathers-alive-ready#readme",
+  "devDependencies": {
+    "@feathersjs/errors": "^4.5.3",
+    "@feathersjs/express": "^4.5.4",
+    "@feathersjs/feathers": "^4.5.3",
+    "typescript": "^3.9.5"
+  },
+  "peerDependencies": {
+    "@feathersjs/errors": ">= 4.5.3",
+    "@feathersjs/express": ">= 4.5.4",
+    "@feathersjs/feathers": ">= 4.5.3"
+  }
+}
