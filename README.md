@@ -79,12 +79,12 @@ The `ready` endpoint will not return a positive result until all keys in the `re
 
 You can customize the plugin by passing in options.
 
-| Property   |     default     |                                                             description |
-| ---------- | :-------------: | ----------------------------------------------------------------------: |
-| configKey  |   `readiness`   | which property to look for the readiness config in the app config files |
-| returnData |      false      |      determines if to return the readiness object in the ready endpoint |
-| aliveUrl   | `/health/alive` |                                                          alive endpoint |
-| readyUrl   | `/health/alive` |                                                          ready endpoint |
+| Property   | default         | description                                                             |
+| ---------- | :-------------- | ----------------------------------------------------------------------- |
+| configKey  | `readiness`     | which property to look for the readiness config in the app config files |
+| returnData | false           | determines if to return the readiness object in the ready endpoint      |
+| aliveUrl   | `/health/alive` | alive endpoint                                                          |
+| readyUrl   | `/health/alive` | ready endpoint                                                          |
 
 ```js
 app.configure(
