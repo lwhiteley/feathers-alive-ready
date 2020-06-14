@@ -1,6 +1,6 @@
 {
   "name": "feathers-alive-ready",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "feathersjs health check endpoints",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
