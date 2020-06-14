@@ -48,7 +48,7 @@ app.configure(mongoose);
 
 What happens in step 2
 
-By default the plugin will now add two endponts `/health/alive` and `/health/ready` to the application.
+By default, the plugin will add two endponts `/health/alive` and `/health/ready` to the application.
 It will also add a function `setReady` using the `app.set` function.
 
 ### Step 3: Tell the application when your service is ready
