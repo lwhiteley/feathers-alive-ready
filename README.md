@@ -54,6 +54,8 @@ It will also add a function `setReady` using the `app.set` function.
 ### Step 3: Tell the application when your service is ready
 
 ```js
+// ./mongoose.ts
+
 export default function (app: Application) {
   mongoose
     .connect(app.get('mongodb'), {
