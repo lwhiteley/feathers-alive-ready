@@ -82,6 +82,17 @@ You can customize the plugin by passing in options.
 | aliveUrl   | `/health/alive` |                                                          alive endpoint |
 | readyUrl   | `/health/alive` |                                                          ready endpoint |
 
+```js
+app.configure(
+  health({
+    configKey: 'readiness',
+    returnData: true,
+    aliveUrl: '/health/alive',
+    readyUrl: '/health/ready',
+  }),
+);
+```
+
 ## License
 
 Licensed under the [MIT license](LICENSE).
