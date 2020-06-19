@@ -8,8 +8,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf lib && tsc",
+    "test": "jest",
+    "build": "rm -rf lib && tsc -p tsconfig.prod.json",
     "publish": "npm run build && git push --tags && git push",
     "release:patch": "npm version patch && npm publish --access public",
     "release:minor": "npm version minor && npm publish --access public",
@@ -40,6 +40,11 @@
     "@feathersjs/errors": "^4.5.3",
     "@feathersjs/express": "^4.5.4",
     "@feathersjs/feathers": "^4.5.3",
+    "@types/jest": "^26.0.0",
+    "@types/supertest": "^2.0.9",
+    "jest": "^26.0.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.1.0",
     "typescript": "^3.9.5"
   },
   "peerDependencies": {
