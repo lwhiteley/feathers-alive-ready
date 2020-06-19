@@ -56,6 +56,8 @@ It will also add a function `setReady` using the `app.set` function.
 ```js
 // ./mongoose.ts
 
+import { setReady } from 'feathers-alive-ready';
+
 export default function (app: Application) {
   mongoose
     .connect(app.get('mongodb'), {
@@ -64,7 +66,7 @@ export default function (app: Application) {
       useUnifiedTopology: true,
     })
     .then(() => {
-      app.get('setReady')('mongoose');
+      setReady(app, 'mongoose');
     })
     .catch((err) => {
       logger.error(err);

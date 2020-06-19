@@ -4,7 +4,7 @@ import { Server } from 'http';
 
 import request from 'supertest';
 
-import { health, HealthOptions } from '../';
+import { health, setReady, HealthOptions } from '../';
 
 const port = 8998;
 const defaultConfig = {
@@ -153,11 +153,13 @@ describe('/health/ready when readiness is configured and ready', () => {
   let app: Application<any>;
   let server: Server;
 
+  const opts = {
+    config: defaultConfig,
+    readiness: { mongoose: false },
+  };
+
   beforeAll(() => {
-    app = createApp({
-      config: defaultConfig,
-      readiness: { mongoose: false },
-    });
+    app = createApp(opts);
     server = app.listen(port);
   });
 
@@ -165,8 +167,23 @@ describe('/health/ready when readiness is configured and ready', () => {
     await server.close();
   });
 
+  afterEach(() => {
+    app.set(opts.config.configKey, opts.readiness);
+  });
+
   it('should return 204 when ready but returnData = false', async () => {
     app.get('setReady')('mongoose');
+
+    return request(app)
+      .get('/health/ready')
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toEqual({});
+      });
+  });
+
+  it('should return 204 when using helper function', async () => {
+    setReady(app, 'mongoose');
 
     return request(app)
       .get('/health/ready')

@@ -8,6 +8,8 @@ export interface HealthOptions {
   readyUrl?: string;
 }
 
+const READY_SETTER = 'setReady';
+
 export const health = (opts?: HealthOptions) => {
   const { configKey: ns, returnData, aliveUrl, readyUrl } = {
     configKey: 'readiness',
@@ -18,7 +20,7 @@ export const health = (opts?: HealthOptions) => {
   };
 
   return function (app: Application) {
-    app.set('setReady', (key: string) => {
+    app.set(READY_SETTER, (key: string) => {
       const readiness = app.get(ns) || {};
 
       if (Object.keys(readiness).includes(key)) {
@@ -56,4 +58,8 @@ export const health = (opts?: HealthOptions) => {
         .send(returnData ? readiness : undefined);
     });
   };
+};
+
+export const setReady = (app: Application, key: string) => {
+  app.get(READY_SETTER)(key);
 };
