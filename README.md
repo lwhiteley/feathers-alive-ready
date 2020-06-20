@@ -86,12 +86,14 @@ The `ready` endpoint will not return a positive result until all keys in the `re
 
 You can customize the plugin by passing in options.
 
-| Property   | default         | description                                                             |
-| ---------- | :-------------- | ----------------------------------------------------------------------- |
-| configKey  | `readiness`     | which property to look for the readiness config in the app config files |
-| returnData | false           | determines if to return the readiness object in the ready endpoint      |
-| aliveUrl   | `/health/alive` | alive endpoint                                                          |
-| readyUrl   | `/health/ready` | ready endpoint                                                          |
+| Property   | default         | description                                                                                                 |
+| ---------- | :-------------- | ----------------------------------------------------------------------------------------------------------- |
+| configKey  | `readiness`     | which property to look for the readiness config in the app config files                                     |
+| returnData | false           | determines if to return the readiness object in the ready endpoint                                          |
+| aliveUrl   | `/health/alive` | alive endpoint                                                                                              |
+| readyUrl   | `/health/ready` | ready endpoint                                                                                              |
+| customOnly | false           | will only honour custom checks when set to true, if false will honour both readiness config + custom checks |
+| custom     | []              | an array of functions that return a boolean eg. `[(app) => true]`                                           |
 
 ```js
 app.configure(
@@ -100,6 +102,19 @@ app.configure(
     returnData: true,
     aliveUrl: '/health/alive',
     readyUrl: '/health/ready',
+  }),
+);
+```
+
+### Optional Configuration
+
+If you want to do your own custom checks then do the following
+
+```js
+app.configure(
+  health({
+    customOnly: true,
+    custom: [(app: Application) => !!app.get('mongooseClient')],
   }),
 );
 ```
