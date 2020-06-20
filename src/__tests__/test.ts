@@ -1,11 +1,10 @@
 import feathers from '@feathersjs/feathers';
-import express, { Application } from '@feathersjs/express';
+import express, { Application as ExpressApp } from '@feathersjs/express';
 import { Server } from 'http';
-
 import request from 'supertest';
-
 import { health, setReady, HealthOptions } from '../';
 
+type Application = ExpressApp<any>;
 const port = 8998;
 const defaultConfig = {
   configKey: 'readiness',
@@ -20,7 +19,7 @@ const createApp = ({
   readiness?: Record<string, boolean>;
   config: HealthOptions;
 }) => {
-  const app: Application<any> = express(feathers());
+  const app: Application = express(feathers());
   app.configure(health(config));
 
   if (config.configKey && readiness) {
@@ -31,7 +30,7 @@ const createApp = ({
 };
 
 describe('/health/alive', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -49,7 +48,7 @@ describe('/health/alive', () => {
 });
 
 describe('/health/alive => custom endpoint', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -69,7 +68,7 @@ describe('/health/alive => custom endpoint', () => {
 });
 
 describe('/health/ready when readiness is not configured', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -95,7 +94,7 @@ describe('/health/ready when readiness is not configured', () => {
 });
 
 describe('/health/ready when readiness is configured', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -122,7 +121,7 @@ describe('/health/ready when readiness is configured', () => {
 });
 
 describe('/health/ready => custom endpoint', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -150,7 +149,7 @@ describe('/health/ready => custom endpoint', () => {
 });
 
 describe('/health/ready when readiness is configured and ready', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   const opts = {
@@ -195,7 +194,7 @@ describe('/health/ready when readiness is configured and ready', () => {
 });
 
 describe('/health/ready when readiness is configured and ready', () => {
-  let app: Application<any>;
+  let app: Application;
   let server: Server;
 
   beforeAll(() => {
@@ -218,6 +217,137 @@ describe('/health/ready when readiness is configured and ready', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({ mongoose: true });
+      });
+  });
+});
+
+describe('/health/ready when readiness is configured and ready with additional custom checks', () => {
+  let app: Application;
+  let server: Server;
+
+  beforeAll(() => {
+    app = createApp({
+      config: {
+        ...defaultConfig,
+        returnData: true,
+        custom: [(app: Application) => !!app.get('mongooseClient')],
+      },
+      readiness: { mongoose: false },
+    });
+    server = app.listen(port);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
+
+  it('should return 200 when ready but returnData = true + include custom data', async () => {
+    app.get('setReady')('mongoose');
+    app.set('mongooseClient', true);
+
+    return request(app)
+      .get('/health/ready')
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({ mongoose: true, custom: [true] });
+      });
+  });
+});
+
+describe('/health/ready when readiness is configured and ready with additional custom checks', () => {
+  let app: Application;
+  let server: Server;
+
+  beforeAll(() => {
+    app = createApp({
+      config: {
+        ...defaultConfig,
+        returnData: true,
+        custom: [(app: Application) => !!app.get('mongooseClient')],
+      },
+      readiness: { mongoose: false },
+    });
+    server = app.listen(port);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
+
+  it('should return 400 when ready but returnData = true + custom checks not ready', async () => {
+    app.get('setReady')('mongoose');
+
+    return request(app)
+      .get('/health/ready')
+      .expect(400)
+      .then((response) => {
+        expect(response.body.name).toEqual('BadRequest');
+        expect(response.body.message).toEqual('Application is not ready');
+      });
+  });
+});
+
+describe('/health/ready when readiness is configured and ready with only custom checks', () => {
+  let app: Application;
+  let server: Server;
+
+  beforeAll(() => {
+    app = createApp({
+      config: {
+        ...defaultConfig,
+        returnData: true,
+        customOnly: true,
+        custom: [(app: Application) => !!app.get('mongooseClient')],
+      },
+      readiness: { mongoose: false },
+    });
+    server = app.listen(port);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
+
+  it('should return 200 when normal checks not ready but in customOnly mode', async () => {
+    app.set('mongooseClient', true);
+
+    return request(app)
+      .get('/health/ready')
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({ custom: [true] });
+      });
+  });
+});
+
+describe('/health/ready when readiness is not configured and ready with only custom checks', () => {
+  let app: Application;
+  let server: Server;
+
+  beforeAll(() => {
+    app = createApp({
+      config: {
+        ...defaultConfig,
+        returnData: true,
+        customOnly: true,
+        custom: [(app: Application) => !!app.get('mongooseClient')],
+      },
+    });
+    server = app.listen(port);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
+
+  it('should return 200 when normal checks not ready but in customOnly mode', async () => {
+    app.set('mongooseClient', true);
+
+    return request(app)
+      .get('/health/ready')
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({ custom: [true] });
       });
   });
 });

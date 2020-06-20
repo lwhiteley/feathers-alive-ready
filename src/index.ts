@@ -1,21 +1,40 @@
 import { BadRequest } from '@feathersjs/errors';
-import { Application } from '@feathersjs/express';
+import { Application as ExpressApp } from '@feathersjs/express';
+
+type Application = ExpressApp<any>;
+
+type ValidationFunction = { (app: Application): boolean };
 
 export interface HealthOptions {
   configKey?: string;
-  returnData?: boolean;
   aliveUrl?: string;
   readyUrl?: string;
+  returnData?: boolean;
+  customOnly?: boolean;
+  custom?: ValidationFunction[];
 }
 
 const READY_SETTER = 'setReady';
 
+const defaultOptions = {
+  configKey: 'readiness',
+  returnData: false,
+  aliveUrl: '/health/alive',
+  readyUrl: '/health/ready',
+  customOnly: false,
+  custom: [],
+};
+
 export const health = (opts?: HealthOptions) => {
-  const { configKey: ns, returnData, aliveUrl, readyUrl } = {
-    configKey: 'readiness',
-    returnData: false,
-    aliveUrl: '/health/alive',
-    readyUrl: '/health/ready',
+  const {
+    configKey: ns,
+    returnData,
+    aliveUrl,
+    readyUrl,
+    custom,
+    customOnly,
+  } = {
+    ...defaultOptions,
     ...(opts || {}),
   };
 
@@ -37,25 +56,37 @@ export const health = (opts?: HealthOptions) => {
 
     app.get(readyUrl, (req, res) => {
       const readiness = req.app.get(ns) || {};
+      const customResults: boolean[] = [];
       const values = Object.values(readiness);
-      const isReady = values.every((value) => value);
-      const details = returnData ? readiness : {};
+      const isReady = customOnly ? true : values.every((value) => value);
+      const isReadyWithCustom = custom.every((value: ValidationFunction) => {
+        const result = value(app);
+        customResults.push(result);
+        return result;
+      });
 
-      if (!Object.keys(readiness).length) {
+      const details = returnData && !customOnly ? readiness : {};
+      if (customResults.length > 0 && returnData) {
+        details.custom = customResults;
+      }
+      const ready = isReady && isReadyWithCustom;
+      const data = { ...details };
+
+      if (!Object.keys(readiness).length && !customOnly) {
         return res
           .status(400)
-          .send(new BadRequest(`config.${ns} not configured`, { ...details }));
+          .send(new BadRequest(`config.${ns} not configured`, data));
       }
 
-      if (!isReady) {
+      if (!ready) {
         return res
           .status(400)
-          .send(new BadRequest('Application is not ready', { ...details }));
+          .send(new BadRequest('Application is not ready', data));
       }
 
       return res
         .status(returnData ? 200 : 204)
-        .send(returnData ? readiness : undefined);
+        .send(returnData ? data : undefined);
     });
   };
 };
