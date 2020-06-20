@@ -1,10 +1,11 @@
 # feathers-alive-ready
 
 [![npm version](https://badge.fury.io/js/feathers-alive-ready.svg)](https://badge.fury.io/js/feathers-alive-ready)
+[![test-lib](https://github.com/lwhiteley/feathers-alive-ready/workflows/test-lib/badge.svg)](https://github.com/lwhiteley/feathers-alive-ready)
 
 feathersjs health check endpoints
 
-> a plugin to add health check endpoints for a feathersjs application
+> a plugin to add health check endpoints to a feathersjs application
 
 ## Installation
 
